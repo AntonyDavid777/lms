@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/auth-context'
@@ -19,10 +19,12 @@ export default function RegisterPage() {
     role: UserRole.STUDENT,
   })
 
-  // Redirect if already authenticated
-  if (isAuthenticated) {
-    router.push('/dashboard')
-  }
+  // Redirect if already authenticated - use useEffect to avoid rendering during render
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push('/dashboard')
+    }
+  }, [isAuthenticated, router])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target

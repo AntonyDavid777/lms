@@ -45,8 +45,24 @@ export default function DashboardPage() {
           <h1 className="text-xl font-bold">TechTots</h1>
         </Link>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4">
           <span className="text-sm text-muted-foreground hidden sm:inline">{user?.name}</span>
+          {user?.role === UserRole.TEACHER && (
+            <>
+              <Link
+                href="/teach/my-courses"
+                className="inline-flex items-center justify-center rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
+              >
+                My Courses
+              </Link>
+              <Link
+                href="/teach/students"
+                className="inline-flex items-center justify-center rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
+              >
+                Students
+              </Link>
+            </>
+          )}
           <Link
             href="/profile"
             className="inline-flex items-center justify-center rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted transition-colors"
