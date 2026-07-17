@@ -1,0 +1,1 @@
+"""TechTots LMS Backend Application"""
