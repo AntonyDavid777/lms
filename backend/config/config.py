@@ -1,8 +1,11 @@
 import os
 from datetime import timedelta
-from dotenv import load_dotenv
 
-load_dotenv()
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # dotenv not available
 
 class Config:
     """Base configuration"""

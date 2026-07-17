@@ -4,12 +4,15 @@ Flask application entry point
 """
 import os
 import sys
-from dotenv import load_dotenv
 
 # Add backend directory to path
 sys.path.insert(0, os.path.dirname(__file__))
 
-load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+try:
+    from dotenv import load_dotenv
+    load_dotenv(os.path.join(os.path.dirname(__file__), '.env'))
+except ImportError:
+    pass  # dotenv not available, use environment variables instead
 
 from app.factory import create_app
 

@@ -1,4 +1,7 @@
-import motor.motor_asyncio
+try:
+    import motor.motor_asyncio
+except ImportError:
+    motor = None  # motor not required for synchronous usage
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure, ServerSelectionTimeoutError
 import logging
