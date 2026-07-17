@@ -39,7 +39,12 @@ export function TeacherDashboard() {
     const loadTeacherData = async () => {
       try {
         // Fetch courses created by teacher
-        const response = await fetch('/api/courses')
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+        const response = await fetch(`${apiUrl}/api/v1/courses`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        })
         if (response.ok) {
           const data = await response.json()
           const teacherCourses = data.data || []

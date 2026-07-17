@@ -39,7 +39,12 @@ export function StudentDashboard() {
     const loadDashboardData = async () => {
       try {
         // Fetch courses progress
-        const response = await fetch('/api/progress/courses')
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+        const response = await fetch(`${apiUrl}/api/v1/progress/courses`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        })
         if (response.ok) {
           const data = await response.json()
           setCoursesProgress(data.data || [])
