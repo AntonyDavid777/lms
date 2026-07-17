@@ -71,3 +71,17 @@ def get_lesson_analytics(course_id, lesson_id):
     
     except Exception as e:
         return error_response(str(e), 500)
+
+
+@bp.route('/admin/dashboard', methods=['GET'])
+@require_role(UserRole.ADMIN.value)
+def get_admin_dashboard_analytics():
+    """Get overall platform analytics for admin dashboard (admin only)"""
+    try:
+        service = AnalyticsService(current_app.db)
+        analytics = service.get_admin_dashboard_analytics()
+        
+        return success_response(analytics, 'Admin dashboard analytics retrieved successfully')
+    
+    except Exception as e:
+        return error_response(str(e), 500)

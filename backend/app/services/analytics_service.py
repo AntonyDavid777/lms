@@ -274,3 +274,65 @@ class AnalyticsService:
         
         except Exception as e:
             raise Exception(f"Failed to get lesson analytics: {str(e)}")
+    
+    # Admin Dashboard Analytics
+    def get_admin_dashboard_analytics(self):
+        """Generate overall platform analytics for admin dashboard"""
+        try:
+            # User statistics
+            total_users = self.db.users.count_documents({})
+            total_students = self.db.users.count_documents({'role': 'student'})
+            total_teachers = self.db.users.count_documents({'role': 'teacher'})
+            total_admins = self.db.users.count_documents({'role': 'admin'})
+            
+            # Course statistics
+            total_courses = self.db.courses.count_documents({})
+            total_enrollments = self.db.enrollments.count_documents({})
+            
+            # Assessment statistics
+            total_assessments = self.db.assessments.count_documents({})
+            
+            # Active users today (last 24 hours)
+            from datetime import datetime, timedelta
+            today = datetime.utcnow()
+            yesterday = today - timedelta(days=1)
+            active_users_today = self.db.users.count_documents({
+                'last_login': {'$gte': yesterday}
+            })
+            
+            # New users this week
+            week_ago = today - timedelta(days=7)
+            new_users_this_week = self.db.users.count_documents({
+                'created_at': {'$gte': week_ago}
+            })
+            
+            # Calculate completion rate
+            completed_enrollments = self.db.enrollments.count_documents({'status': 'completed'})
+            course_completion_rate = (completed_enrollments / total_enrollments * 100) if total_enrollments > 0 else 0
+            
+            # Calculate average assessment score
+            all_submissions = list(self.db.assessment_submissions.find({'is_graded': True}))
+            average_assessment_score = 0
+            if all_submissions:
+                average_assessment_score = sum(s.get('final_score', 0) for s in all_submissions) / len(all_submissions)
+            
+            # Platform health (basic check)
+            platform_health = 'good'  # Can be extended with more checks
+            
+            return {
+                'total_users': total_users,
+                'total_students': total_students,
+                'total_teachers': total_teachers,
+                'total_admins': total_admins,
+                'total_courses': total_courses,
+                'total_enrollments': total_enrollments,
+                'total_assessments': total_assessments,
+                'active_users_today': active_users_today,
+                'new_users_this_week': new_users_this_week,
+                'course_completion_rate': round(course_completion_rate, 2),
+                'average_assessment_score': round(average_assessment_score, 2),
+                'platform_health': platform_health
+            }
+        
+        except Exception as e:
+            raise Exception(f"Failed to generate admin dashboard analytics: {str(e)}")

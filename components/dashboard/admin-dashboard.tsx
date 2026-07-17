@@ -47,7 +47,12 @@ export function AdminDashboard() {
     const loadAdminData = async () => {
       try {
         // Fetch analytics data
-        const response = await fetch('/api/analytics')
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'
+        const response = await fetch(`${apiUrl}/api/v1/analytics/admin/dashboard`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        })
         if (response.ok) {
           const data = await response.json()
           const analytics = data.data || {}
